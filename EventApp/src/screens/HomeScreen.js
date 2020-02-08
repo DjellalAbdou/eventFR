@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2
   },
   eventsContainer: {
-    marginTop: 30
+    marginTop: "10%"
   }
 });
 
