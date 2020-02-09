@@ -5,19 +5,16 @@ import {
   ImageBackground,
   StyleSheet,
   Dimensions,
-  Image,
   TouchableOpacity
 } from "react-native";
-
+import EventComp from "../components/EventComp";
 import { Feather } from "@expo/vector-icons";
-import NavigationService from "../navigation/routes/NavigationService";
+import IconRippleButton from "../components/IconRippleButton";
+import EditEventComp from "../components/EditEventComp";
 
 const { height, width } = Dimensions.get("window");
 
-const SettingsScreen = () => {
-  const ChangeScreen = screen => {
-    NavigationService.navigate(screen);
-  };
+const MyEventsScreen = props => {
   return (
     <View>
       <ImageBackground
@@ -29,7 +26,17 @@ const SettingsScreen = () => {
         <View style={styles.headerShapeLeft} />
         <View style={styles.headerShapeRight} />
         <View style={styles.HeaderContainer}>
-          <Text style={styles.headerTitle}>Parametres</Text>
+          <View style={styles.goBackContainer}>
+            <IconRippleButton
+              style={styles.gobackArrow}
+              name="arrow-left"
+              size={30}
+              rippleColor="#ffffff"
+              color="#ffffff"
+              onPress={() => props.navigation.goBack()}
+            />
+            <Text style={styles.headerTitle}>Favoris</Text>
+          </View>
         </View>
         <View style={styles.container}>
           <ImageBackground
@@ -39,43 +46,14 @@ const SettingsScreen = () => {
             resizeMode="contain"
           >
             <View style={styles.eventContainer}>
-              <View style={styles.profilepicContainer}>
-                <Image
-                  source={require("../../assets/profile_freelance.jpg")}
-                  style={styles.profilePic}
-                />
-                <Text style={styles.ProfileText}>abdou djellal</Text>
+              <View style={styles.greenBorderContainer}>
+                <View style={styles.greenBorder} />
               </View>
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={() => ChangeScreen("MyEvents")}
-              >
-                <Feather
-                  style={styles.icons}
-                  name="tag"
-                  size={20}
-                  color="#062743"
-                />
-                <Text style={styles.ProfileText}>mes evenements</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainer}>
-                <Feather
-                  style={styles.icons}
-                  name="map"
-                  size={20}
-                  color="#062743"
-                />
-                <Text style={styles.ProfileText}>changer de region</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainer}>
-                <Feather
-                  style={styles.icons}
-                  name="log-out"
-                  size={20}
-                  color="#062743"
-                />
-                <Text style={styles.ProfileText}>se déconnecter</Text>
-              </TouchableOpacity>
+              <View style={{ marginTop: 20 }}>
+                <EditEventComp />
+                <EditEventComp />
+                <EditEventComp />
+              </View>
             </View>
           </ImageBackground>
         </View>
@@ -83,6 +61,8 @@ const SettingsScreen = () => {
     </View>
   );
 };
+
+export default MyEventsScreen;
 
 const styles = StyleSheet.create({
   fullbackground: {
@@ -122,6 +102,7 @@ const styles = StyleSheet.create({
     transform: [{ rotate: "329deg" }]
   },
   HeaderContainer: {
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     height: "22%",
@@ -137,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F8F8",
     borderTopLeftRadius: 31,
     borderTopRightRadius: 31,
-    height: "78%",
+    height: height,
     shadowOpacity: 0.05,
     shadowRadius: 10,
     shadowColor: "#062743",
@@ -158,48 +139,26 @@ const styles = StyleSheet.create({
     opacity: 0.33
   },
   eventContainer: {
-    marginTop: "20%",
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    shadowColor: "#062743",
-    shadowOffset: { height: 0, width: 0 },
-    elevation: 2,
-    backgroundColor: "#FFFFFF",
-    marginHorizontal: 33,
-    borderRadius: 16,
-    height: "65%"
+    marginTop: 20
   },
-  profilePic: {
-    width: 60,
-    height: 60,
-    borderRadius: 50,
-    marginRight: 20
-  },
-  profilepicContainer: {
+  goBackContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    borderBottomColor: "#E8E8E8",
-    borderBottomWidth: 1
+    justifyContent: "center",
+    width: "100%"
   },
-  ProfileText: {
-    fontSize: 17,
-    fontWeight: "bold",
-    color: "#062743",
-    textTransform: "capitalize"
+  gobackArrow: {
+    position: "absolute",
+    left: 39
   },
-  buttonContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 20
+  greenBorder: {
+    backgroundColor: "#76EF4D",
+    borderRadius: 30,
+    width: 80,
+    height: 7
   },
-  icons: {
-    width: 60,
-    marginLeft: 10,
-    marginRight: 20,
-    textAlign: "center"
+  greenBorderContainer: {
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
-
-export { SettingsScreen };

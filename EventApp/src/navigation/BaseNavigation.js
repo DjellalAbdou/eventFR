@@ -13,7 +13,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { Feather } from "@expo/vector-icons";
 import AddButton from "../components/AddButton";
 
-const TabsNavigator = createBottomTabNavigator(
+const BaseNavigation = createBottomTabNavigator(
   {
     [Routes.TabHome]: {
       screen: HomeScreen,
@@ -68,6 +68,4 @@ const TabsNavigator = createBottomTabNavigator(
   }
 );
 
-const BaseNavigation = createAppContainer(TabsNavigator);
-
-export default () => <BaseNavigation theme="light" />;
+export default BaseNavigation;

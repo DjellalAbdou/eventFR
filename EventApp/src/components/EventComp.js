@@ -9,10 +9,17 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
+const { width, height } = Dimensions.get("window");
+
 const EventComp = props => {
   return (
     <TouchableOpacity>
-      <View style={styles.compContainer}>
+      <View
+        style={[
+          styles.compContainer,
+          props.edit ? { width: width * 0.7 } : null
+        ]}
+      >
         <ImageBackground
           resizeMode="cover"
           source={require("../../assets/work.jpg")}
