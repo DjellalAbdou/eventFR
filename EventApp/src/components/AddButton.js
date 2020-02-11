@@ -1,10 +1,19 @@
 import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import NavigationService from "../navigation/routes/NavigationService";
 
 const AddButton = () => {
+  const ChangeScreen = screen => {
+    NavigationService.navigate(screen);
+  };
+
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => {
+        ChangeScreen("AddEvent");
+      }}
+    >
       <View style={styles.button}>
         <Feather style={styles.icon} name="plus" size={30} color="#ffffff" />
       </View>

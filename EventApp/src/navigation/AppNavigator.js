@@ -1,6 +1,7 @@
 import { createStackNavigator } from "react-navigation-stack";
 import BaseNavigation from "./BaseNavigation";
 import MyEventsScreen from "../screens/MyEventsScreen";
+import { AddScreen } from "../screens";
 
 const AppNavigator = createStackNavigator(
   {
@@ -9,6 +10,9 @@ const AppNavigator = createStackNavigator(
     },
     MyEvents: {
       screen: MyEventsScreen
+    },
+    AddEvent: {
+      screen: AddScreen
     }
   },
   {

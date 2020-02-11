@@ -55,7 +55,7 @@ const HomeScreen = () => {
           value={inputField}
           placeholder="Seacher evenement..."
           placeholderTextColor="#BBBBBB"
-          clearTextOnFocus
+          //clearTextOnFocus
           onChangeText={text => handleChange(text)}
           selectionColor="#76EF4D"
           onFocus={() => handleFocuse(true)}
