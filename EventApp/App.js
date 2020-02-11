@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, StatusBar } from "react-native";
 import BaseNavigation from "./src/navigation/BaseNavigation";
 import AppNavigator from "./src/navigation/AppNavigator";
 import Root from "./src/navigation/Root";
@@ -52,6 +52,11 @@ LocaleConfig.defaultLocale = "fr";
 export default function App() {
   return (
     <View style={styles.container}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
       <Root
         ref={navigationRef => {
           NavigationService.setTopLevelNavigator(navigationRef);

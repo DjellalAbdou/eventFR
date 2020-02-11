@@ -7,7 +7,10 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
-  ScrollView
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+  SafeAreaView
 } from "react-native";
 import EventComp from "../components/EventComp";
 import { Feather } from "@expo/vector-icons";
@@ -15,6 +18,9 @@ import IconRippleButton from "../components/IconRippleButton";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import TextArea from "react-native-textarea";
 import { Dropdown } from "react-native-material-dropdown";
+import SearchableDropdown from "react-native-searchable-dropdown";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
+import ModalDropdown from "react-native-modal-dropdown";
 
 const { height, width } = Dimensions.get("window");
 let data = [
@@ -39,200 +45,191 @@ class AddScreen extends Component {
   render() {
     return (
       <View>
-        <ImageBackground
-          source={require("../../assets/dotted.png")}
-          style={styles.fullbackground}
-          imageStyle={styles.dotted}
-          resizeMode="contain"
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-          <View style={styles.headerShapeLeft} />
-          <View style={styles.headerShapeRight} />
-          <View style={styles.HeaderContainer}>
-            <View style={styles.goBackContainer}>
-              <IconRippleButton
-                style={styles.gobackArrow}
-                name="arrow-left"
-                size={30}
-                rippleColor="#ffffff"
-                color="#ffffff"
-                onPress={() => this.props.navigation.goBack()}
-              />
-              <Text style={styles.headerTitle}>Ajouter evenement</Text>
-            </View>
-          </View>
-          <View style={styles.container}>
-            <ImageBackground
-              source={require("../../assets/skyline.png")}
-              style={styles.screenContainer}
-              imageStyle={styles.backgroundImage}
-              resizeMode="contain"
-            >
-              <ScrollView>
-                <View style={styles.eventContainer}>
-                  <View style={styles.formContainer}>
-                    <View style={styles.sectionContainer}>
-                      <Text style={styles.textTitle}>nom</Text>
-                      <TextInput
-                        style={styles.textInput}
-                        name="inputField"
-                        //value={inputField}
-                        placeholder="nom de l'événement..."
-                        placeholderTextColor="#BBBBBB"
-                        //clearTextOnFocus
-                        //onChangeText={text => handleChange(text)}
-                        selectionColor="#76EF4D"
-                        //onFocus={() => handleFocuse(true)}
-                        //onBlur={() => handleFocuse(false)}
-                      />
-                    </View>
-                    <View style={styles.sectionContainer}>
-                      <Text style={styles.textTitle}>Date</Text>
-                      <TextInput
-                        style={styles.textInput}
-                        name="inputField"
-                        //value={inputField}
-                        placeholder="choissisez..."
-                        placeholderTextColor="#BBBBBB"
-                        //clearTextOnFocus
-                        //onChangeText={text => handleChange(text)}
-                        selectionColor="#76EF4D"
-                        onFocus={() => {
-                          this.setState({ mode: "date", show: true });
-                        }}
-                        //onBlur={() => handleFocuse(false)}
-                      />
-                    </View>
-
-                    <View style={styles.sectionContainer}>
-                      <Text style={styles.textTitle}>temps</Text>
-                      <View style={styles.timeContainer}>
-                        <TextInput
-                          style={[styles.textInput, { width: "45%" }]}
-                          name="inputField"
-                          //value={inputField}
-                          placeholder="debut..."
-                          placeholderTextColor="#BBBBBB"
-                          //clearTextOnFocus
-                          //onChangeText={text => handleChange(text)}
-                          selectionColor="#76EF4D"
-                          onFocus={() => {
-                            this.setState({ mode: "time", show: true });
-                          }}
-                          //onBlur={() => handleFocuse(false)}
-                        />
-                        <TextInput
-                          style={[styles.textInput, { width: "45%" }]}
-                          name="inputField"
-                          //value={inputField}
-                          placeholder="fin..."
-                          placeholderTextColor="#BBBBBB"
-                          //clearTextOnFocus
-                          //onChangeText={text => handleChange(text)}
-                          selectionColor="#76EF4D"
-                          onFocus={() => {
-                            this.setState({ mode: "time", show: true });
-                          }}
-                          //onBlur={() => handleFocuse(false)}
-                        />
-                      </View>
-                    </View>
-
-                    <View style={styles.sectionContainer}>
-                      <Text style={styles.textTitle}>Image</Text>
-                      <TouchableOpacity style={styles.imageWrapper}>
-                        <Feather name="image" size={50} color="#062743" />
-                      </TouchableOpacity>
-                    </View>
-                    <View style={styles.sectionContainer}>
-                      <Text style={styles.textTitle}>description</Text>
-                      {/* <TextInput
-                        name="inputField"
-                        style={styles.textArea}
-                        //value={inputField}
-                        editable={true}
-                        multiline={true}
-                        placeholder="nom de l'événement..."
-                        placeholderTextColor="#BBBBBB"
-                        
-                        //clearTextOnFocus
-                        //onChangeText={text => handleChange(text)}
-                        selectionColor="#76EF4D"
-                        //onFocus={() => handleFocuse(true)}
-                        //onBlur={() => handleFocuse(false)}
-                      /> */}
-                      <TextArea
-                        containerStyle={styles.textArea}
-                        maxLength={200}
-                        placeholder="ecrire une description"
-                      />
-                    </View>
-                    <View>
-                      <Text style={styles.textTitle}>location</Text>
-                      <View>
-                        <Dropdown
-                          label="Ville"
-                          baseColor="#76EF4D"
-                          textColor="#062743"
-                          itemColor="#062743"
-                          itemTextStyle={styles.dropDown}
-                          data={data}
-                        />
-                        <TextInput
-                          name="inputField"
-                          //value={inputField}
-                          placeholder="nom de l'événement..."
-                          placeholderTextColor="#BBBBBB"
-                          //clearTextOnFocus
-                          //onChangeText={text => handleChange(text)}
-                          selectionColor="#76EF4D"
-                          //onFocus={() => handleFocuse(true)}
-                          //onBlur={() => handleFocuse(false)}
-                        />
-                        <TextInput
-                          name="inputField"
-                          //value={inputField}
-                          placeholder="nom de l'événement..."
-                          placeholderTextColor="#BBBBBB"
-                          //clearTextOnFocus
-                          //onChangeText={text => handleChange(text)}
-                          selectionColor="#76EF4D"
-                          //onFocus={() => handleFocuse(true)}
-                          //onBlur={() => handleFocuse(false)}
-                        />
-                      </View>
-                    </View>
-                    <View>
-                      <Text style={styles.textTitle}>
-                        nombre de partisipant
-                      </Text>
-                      <TextInput
-                        name="inputField"
-                        //value={inputField}
-                        placeholder="nom de l'événement..."
-                        placeholderTextColor="#BBBBBB"
-                        //clearTextOnFocus
-                        //onChangeText={text => handleChange(text)}
-                        selectionColor="#76EF4D"
-                        //onFocus={() => handleFocuse(true)}
-                        //onBlur={() => handleFocuse(false)}
-                      />
-                    </View>
+          <KeyboardAwareScrollView
+            enableOnAndroid={true}
+            enableAutomaticScroll={Platform.OS === "ios"}
+          >
+            <SafeAreaView>
+              <ImageBackground
+                source={require("../../assets/dotted.png")}
+                style={styles.fullbackground}
+                imageStyle={styles.dotted}
+                resizeMode="contain"
+              >
+                <View style={styles.headerShapeLeft} />
+                <View style={styles.headerShapeRight} />
+                <View style={styles.HeaderContainer}>
+                  <View style={styles.goBackContainer}>
+                    <IconRippleButton
+                      style={styles.gobackArrow}
+                      name="arrow-left"
+                      size={30}
+                      rippleColor="#ffffff"
+                      color="#ffffff"
+                      onPress={() => this.props.navigation.goBack()}
+                    />
+                    <Text style={styles.headerTitle}>Ajouter evenement</Text>
                   </View>
                 </View>
-                {this.state.show && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    timeZoneOffsetInMinutes={0}
-                    value={this.state.date}
-                    mode={this.state.mode}
-                    is24Hour={true}
-                    display="default"
-                  />
-                )}
-              </ScrollView>
-            </ImageBackground>
-          </View>
-        </ImageBackground>
+                <View style={styles.container}>
+                  <ImageBackground
+                    source={require("../../assets/skyline.png")}
+                    style={styles.screenContainer}
+                    imageStyle={styles.backgroundImage}
+                    resizeMode="contain"
+                    resizeMethod="auto"
+                  >
+                    <View style={styles.eventContainer}>
+                      <View style={styles.formContainer}>
+                        <View style={styles.sectionContainer}>
+                          <Text style={styles.textTitle}>nom</Text>
+                          <TextInput
+                            style={styles.textInput}
+                            name="inputField"
+                            placeholder="nom de l'événement..."
+                            placeholderTextColor="#BBBBBB"
+                            selectionColor="#76EF4D"
+                          />
+                        </View>
+                        <View style={styles.sectionContainer}>
+                          <Text style={styles.textTitle}>Date</Text>
+                          <TextInput
+                            style={styles.textInput}
+                            name="inputField"
+                            placeholder="choissisez..."
+                            placeholderTextColor="#BBBBBB"
+                            selectionColor="#76EF4D"
+                            onFocus={() => {
+                              this.setState({ mode: "date", show: true });
+                            }}
+                          />
+                        </View>
+
+                        <View style={styles.sectionContainer}>
+                          <Text style={styles.textTitle}>temps</Text>
+                          <View style={styles.timeContainer}>
+                            <TextInput
+                              style={[styles.textInput, { width: "45%" }]}
+                              name="inputField"
+                              //value={inputField}
+                              placeholder="debut..."
+                              placeholderTextColor="#BBBBBB"
+                              //clearTextOnFocus
+                              //onChangeText={text => handleChange(text)}
+                              selectionColor="#76EF4D"
+                              onFocus={() => {
+                                this.setState({ mode: "time", show: true });
+                              }}
+                              //onBlur={() => handleFocuse(false)}
+                            />
+                            <TextInput
+                              style={[styles.textInput, { width: "45%" }]}
+                              name="inputField"
+                              //value={inputField}
+                              placeholder="fin..."
+                              placeholderTextColor="#BBBBBB"
+                              //clearTextOnFocus
+                              //onChangeText={text => handleChange(text)}
+                              selectionColor="#76EF4D"
+                              onFocus={() => {
+                                this.setState({ mode: "time", show: true });
+                              }}
+                              //onBlur={() => handleFocuse(false)}
+                            />
+                          </View>
+                        </View>
+
+                        <View style={styles.sectionContainer}>
+                          <Text style={styles.textTitle}>Image</Text>
+                          <TouchableOpacity style={styles.imageWrapper}>
+                            <Feather name="image" size={50} color="#062743" />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={styles.sectionContainer}>
+                          <Text style={styles.textTitle}>description</Text>
+                          <TextArea
+                            containerStyle={styles.textArea}
+                            maxLength={200}
+                            placeholder="ecrire une description"
+                          />
+                        </View>
+                        <View style={styles.sectionContainer}>
+                          <Text style={styles.textTitle}>location</Text>
+                          <View style={styles.timeContainer}>
+                            <TextInput
+                              style={[styles.textInput, { width: "45%" }]}
+                              name="inputField"
+                              //value={inputField}
+                              placeholder="ville..."
+                              placeholderTextColor="#BBBBBB"
+                              //clearTextOnFocus
+                              //onChangeText={text => handleChange(text)}
+                              selectionColor="#76EF4D"
+                              //onFocus={() => handleFocuse(true)}
+                              //onBlur={() => handleFocuse(false)}
+                            />
+                            <TextInput
+                              style={[styles.textInput, { width: "45%" }]}
+                              name="inputField"
+                              //value={inputField}
+                              placeholder="rue..."
+                              placeholderTextColor="#BBBBBB"
+                              //clearTextOnFocus
+                              //onChangeText={text => handleChange(text)}
+                              selectionColor="#76EF4D"
+                              //onFocus={() => handleFocuse(true)}
+                              //onBlur={() => handleFocuse(false)}
+                            />
+                          </View>
+                        </View>
+                        <View style={styles.sectionContainer}>
+                          <Text style={styles.textTitle}>
+                            nombre de partisipant
+                          </Text>
+                          <TextInput
+                            style={styles.textInput}
+                            name="inputField"
+                            //value={inputField}
+                            placeholder="nombre..."
+                            placeholderTextColor="#BBBBBB"
+                            //clearTextOnFocus
+                            //onChangeText={text => handleChange(text)}
+                            selectionColor="#76EF4D"
+                            //onFocus={() => handleFocuse(true)}
+                            //onBlur={() => handleFocuse(false)}
+                          />
+                        </View>
+                        <View
+                          style={[
+                            styles.sectionContainer,
+                            { justifyContent: "center", alignItems: "center" }
+                          ]}
+                        >
+                          <TouchableOpacity style={styles.sendBtn}>
+                            <Text style={styles.sendTxt}>ajouter</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                      {this.state.show && (
+                        <DateTimePicker
+                          testID="dateTimePicker"
+                          timeZoneOffsetInMinutes={0}
+                          value={this.state.date}
+                          mode={this.state.mode}
+                          is24Hour={true}
+                          display="default"
+                        />
+                      )}
+                    </View>
+                  </ImageBackground>
+                </View>
+              </ImageBackground>
+            </SafeAreaView>
+          </KeyboardAwareScrollView>
+        </KeyboardAvoidingView>
       </View>
     );
   }
@@ -242,13 +239,14 @@ export { AddScreen };
 
 const styles = StyleSheet.create({
   fullbackground: {
-    height,
+    //height: "300%",
     width,
     backgroundColor: "#76EF4D"
   },
   dotted: {
     position: "absolute",
-    top: -height / 2 + 20,
+    //top: -height / 2 + 20,
+    top: 0,
     left: "auto",
     right: 30,
     width: 70,
@@ -281,7 +279,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    height: "22%",
+    height: (height * 22) / 100,
     width
   },
   headerTitle: {
@@ -295,7 +293,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F8F8",
     borderTopLeftRadius: 31,
     borderTopRightRadius: 31,
-    height: height,
+    //height: height,
     shadowOpacity: 0.05,
     shadowRadius: 10,
     shadowColor: "#062743",
@@ -304,19 +302,23 @@ const styles = StyleSheet.create({
   },
   screenContainer: {
     width: width,
-    height: "78%",
+    //height: "78%",
     backgroundColor: "#F8F8F8",
     borderTopLeftRadius: 31,
     borderTopRightRadius: 31
   },
   backgroundImage: {
     position: "absolute",
-    top: height / 2 - 53,
+    top: "auto",
+    bottom: -62,
     width: width,
+    height: 250,
     opacity: 0.33
+    //backgroundColor: "red"
   },
   eventContainer: {
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 120
   },
   goBackContainer: {
     flexDirection: "row",
@@ -329,6 +331,7 @@ const styles = StyleSheet.create({
     left: 20
   },
   formContainer: {
+    //height: "80%",
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 17,
     paddingTop: 30,
@@ -386,5 +389,23 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     padding: 10
     //height: 110
+  },
+  sendBtn: {
+    backgroundColor: "#76EF4D",
+    borderRadius: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowOpacity: 0.29,
+    shadowRadius: 10,
+    shadowColor: "#000000",
+    shadowOffset: { height: 0, width: 0 },
+    elevation: 2,
+    paddingVertical: 12,
+    paddingHorizontal: 45
+  },
+  sendTxt: {
+    fontSize: 18,
+    color: "#ffffff",
+    fontWeight: "bold"
   }
 });
