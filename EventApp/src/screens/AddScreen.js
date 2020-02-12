@@ -151,6 +151,8 @@ class AddScreen extends Component {
                         <View style={styles.sectionContainer}>
                           <Text style={styles.textTitle}>description</Text>
                           <TextArea
+                            //style={{ height: 180 }}
+                            multiline
                             containerStyle={styles.textArea}
                             maxLength={200}
                             placeholder="ecrire une description"
@@ -192,14 +194,9 @@ class AddScreen extends Component {
                           <TextInput
                             style={styles.textInput}
                             name="inputField"
-                            //value={inputField}
                             placeholder="nombre..."
                             placeholderTextColor="#BBBBBB"
-                            //clearTextOnFocus
-                            //onChangeText={text => handleChange(text)}
                             selectionColor="#76EF4D"
-                            //onFocus={() => handleFocuse(true)}
-                            //onBlur={() => handleFocuse(false)}
                           />
                         </View>
                         <View
@@ -387,8 +384,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#BBBBBB",
     borderRadius: 11,
-    padding: 10
-    //height: 110
+    padding: 10,
+    height: 180
   },
   sendBtn: {
     backgroundColor: "#76EF4D",

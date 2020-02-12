@@ -8,12 +8,17 @@ import {
   StyleSheet
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import NavigationService from "../navigation/routes/NavigationService";
 
 const { width, height } = Dimensions.get("window");
 
 const EventComp = props => {
+  const changeRoute = route => {
+    NavigationService.navigate(route);
+  };
+
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => changeRoute("currentEvent")}>
       <View
         style={[
           styles.compContainer,

@@ -35,7 +35,7 @@ const MyEventsScreen = props => {
               color="#ffffff"
               onPress={() => props.navigation.goBack()}
             />
-            <Text style={styles.headerTitle}>Favoris</Text>
+            <Text style={styles.headerTitle}>mes evenements</Text>
           </View>
         </View>
         <View style={styles.container}>
@@ -109,7 +109,8 @@ const styles = StyleSheet.create({
     width
   },
   headerTitle: {
-    fontSize: 30,
+    marginLeft: 20,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#ffffff"
   },
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   },
   gobackArrow: {
     position: "absolute",
-    left: 39
+    left: 25
   },
   greenBorder: {
     backgroundColor: "#76EF4D",
