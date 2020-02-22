@@ -14,6 +14,7 @@ const { width, height } = Dimensions.get("window");
 
 const EventComp = props => {
   const changeRoute = route => {
+    if (props.modal) props.removeModal();
     NavigationService.navigate(route);
   };
 
@@ -22,7 +23,7 @@ const EventComp = props => {
       <View
         style={[
           styles.compContainer,
-          props.edit ? { width: width * 0.7 } : null
+          props.modal ? { width: width * 0.7 } : null
         ]}
       >
         <ImageBackground

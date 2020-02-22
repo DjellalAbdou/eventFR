@@ -4,8 +4,10 @@ import {
   CalendarScreen,
   HomeScreen,
   LikesScreen,
-  SettingsScreen
+  SettingsScreen,
+  MapScreen
 } from "../screens";
+import TestScreen from "../screens/TestScreen";
 import { Routes } from "./routes/navigationRoutes";
 import { createAppContainer } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -38,10 +40,10 @@ const BaseNavigation = createBottomTabNavigator(
       })
     },
     [Routes.TabCalendar]: {
-      screen: CalendarScreen,
+      screen: MapScreen,
       navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
-          <Feather name="calendar" size={18} color={tintColor} />
+          <Feather name="map" size={18} color={tintColor} />
         )
       })
     },

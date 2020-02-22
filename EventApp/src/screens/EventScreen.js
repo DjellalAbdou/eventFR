@@ -9,6 +9,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import IconRippleButton from "../components/IconRippleButton";
+import { Feather } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
@@ -22,14 +23,26 @@ const EventScreen = props => {
         //resizeMode="contain"
       >
         <View style={styles.headerContainer}>
-          <IconRippleButton
-            style={styles.gobackArrow}
-            name="arrow-left"
-            size={25}
-            rippleColor="#ffffff"
-            color="#ffffff"
-            onPress={() => props.navigation.goBack()}
-          />
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between"
+            }}
+          >
+            <IconRippleButton
+              style={styles.gobackArrow}
+              name="arrow-left"
+              size={25}
+              rippleColor="#ffffff"
+              color="#ffffff"
+              onPress={() => props.navigation.goBack()}
+            />
+            <TouchableOpacity>
+              <Feather name="heart" size={25} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.headerTitlesContainer}>
             <Text style={styles.headerTitle}>partie de barbecue</Text>
             <View style={{ flexDirection: "row" }}>
