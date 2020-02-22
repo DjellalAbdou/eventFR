@@ -21,6 +21,7 @@ import { Dropdown } from "react-native-material-dropdown";
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import ModalDropdown from "react-native-modal-dropdown";
+import { Formik } from "formik";
 
 const { height, width } = Dimensions.get("window");
 let data = [
@@ -36,10 +37,42 @@ let data = [
 ];
 
 class AddScreen extends Component {
+  date = new Date();
+
   state = {
-    date: new Date(),
+    date: this.date,
+    timeStart: this.date.getHours() + ":" + this.date.getMinutes(),
+    timeEnd: this.date.getHours() + ":" + this.date.getMinutes(),
     mode: "date",
-    show: false
+    show: false,
+    isTimeStart: false,
+    isTimeEnd: false
+  };
+
+  onChangePicker = (event, selectedDate) => {
+    //console.log(this.state.mode);
+    const currentDate =
+      this.state.mode === "date"
+        ? selectedDate || this.state.date
+        : this.state.date;
+
+    const chosenTime =
+      this.state.mode === "time"
+        ? selectedDate.getHours() + ":" + selectedDate.getMinutes() ||
+          this.state.date.getHours() + ":" + this.state.date.getMinutes()
+        : this.state.date.getHours() + ":" + this.state.date.getMinutes();
+
+    //console.log(currentDate);
+    //console.log(chosenTime);
+
+    this.setState({
+      timeStart: this.state.isTimeStart ? chosenTime : this.state.timeStart,
+      timeEnd: this.state.isTimeEnd ? chosenTime : this.state.timeEnd,
+      date: currentDate,
+      show: Platform.OS === "ios" ? true : false,
+      isTimeStart: false,
+      isTimeEnd: false
+    });
   };
 
   render() {
@@ -84,131 +117,225 @@ class AddScreen extends Component {
                   >
                     <View style={styles.eventContainer}>
                       <View style={styles.formContainer}>
-                        <View style={styles.sectionContainer}>
-                          <Text style={styles.textTitle}>nom</Text>
-                          <TextInput
-                            style={styles.textInput}
-                            name="inputField"
-                            placeholder="nom de l'événement..."
-                            placeholderTextColor="#BBBBBB"
-                            selectionColor="#76EF4D"
-                          />
-                        </View>
-                        <View style={styles.sectionContainer}>
-                          <Text style={styles.textTitle}>Date</Text>
-                          <TextInput
-                            style={styles.textInput}
-                            name="inputField"
-                            placeholder="choissisez..."
-                            placeholderTextColor="#BBBBBB"
-                            selectionColor="#76EF4D"
-                            onFocus={() => {
-                              this.setState({ mode: "date", show: true });
-                            }}
-                          />
-                        </View>
-
-                        <View style={styles.sectionContainer}>
-                          <Text style={styles.textTitle}>temps</Text>
-                          <View style={styles.timeContainer}>
-                            <TextInput
-                              style={[styles.textInput, { width: "45%" }]}
-                              name="inputField"
-                              //value={inputField}
-                              placeholder="debut..."
-                              placeholderTextColor="#BBBBBB"
-                              //clearTextOnFocus
-                              //onChangeText={text => handleChange(text)}
-                              selectionColor="#76EF4D"
-                              onFocus={() => {
-                                this.setState({ mode: "time", show: true });
-                              }}
-                              //onBlur={() => handleFocuse(false)}
-                            />
-                            <TextInput
-                              style={[styles.textInput, { width: "45%" }]}
-                              name="inputField"
-                              //value={inputField}
-                              placeholder="fin..."
-                              placeholderTextColor="#BBBBBB"
-                              //clearTextOnFocus
-                              //onChangeText={text => handleChange(text)}
-                              selectionColor="#76EF4D"
-                              onFocus={() => {
-                                this.setState({ mode: "time", show: true });
-                              }}
-                              //onBlur={() => handleFocuse(false)}
-                            />
-                          </View>
-                        </View>
-
-                        <View style={styles.sectionContainer}>
-                          <Text style={styles.textTitle}>Image</Text>
-                          <TouchableOpacity style={styles.imageWrapper}>
-                            <Feather name="image" size={50} color="#062743" />
-                          </TouchableOpacity>
-                        </View>
-                        <View style={styles.sectionContainer}>
-                          <Text style={styles.textTitle}>description</Text>
-                          <TextArea
-                            //style={{ height: 180 }}
-                            multiline
-                            containerStyle={styles.textArea}
-                            maxLength={200}
-                            placeholder="ecrire une description"
-                          />
-                        </View>
-                        <View style={styles.sectionContainer}>
-                          <Text style={styles.textTitle}>location</Text>
-                          <View style={styles.timeContainer}>
-                            <TextInput
-                              style={[styles.textInput, { width: "45%" }]}
-                              name="inputField"
-                              //value={inputField}
-                              placeholder="ville..."
-                              placeholderTextColor="#BBBBBB"
-                              //clearTextOnFocus
-                              //onChangeText={text => handleChange(text)}
-                              selectionColor="#76EF4D"
-                              //onFocus={() => handleFocuse(true)}
-                              //onBlur={() => handleFocuse(false)}
-                            />
-                            <TextInput
-                              style={[styles.textInput, { width: "45%" }]}
-                              name="inputField"
-                              //value={inputField}
-                              placeholder="rue..."
-                              placeholderTextColor="#BBBBBB"
-                              //clearTextOnFocus
-                              //onChangeText={text => handleChange(text)}
-                              selectionColor="#76EF4D"
-                              //onFocus={() => handleFocuse(true)}
-                              //onBlur={() => handleFocuse(false)}
-                            />
-                          </View>
-                        </View>
-                        <View style={styles.sectionContainer}>
-                          <Text style={styles.textTitle}>
-                            nombre de partisipant
-                          </Text>
-                          <TextInput
-                            style={styles.textInput}
-                            name="inputField"
-                            placeholder="nombre..."
-                            placeholderTextColor="#BBBBBB"
-                            selectionColor="#76EF4D"
-                          />
-                        </View>
-                        <View
-                          style={[
-                            styles.sectionContainer,
-                            { justifyContent: "center", alignItems: "center" }
-                          ]}
+                        <Formik
+                          initialValues={{
+                            name: "",
+                            description: "",
+                            city: "",
+                            street: "",
+                            nbParticipant: 0
+                          }}
+                          onSubmit={values => {
+                            console.log(values);
+                          }}
                         >
-                          <TouchableOpacity style={styles.sendBtn}>
-                            <Text style={styles.sendTxt}>ajouter</Text>
-                          </TouchableOpacity>
-                        </View>
+                          {formikProps => (
+                            <View>
+                              <View style={styles.sectionContainer}>
+                                <Text style={styles.textTitle}>nom</Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  name="name"
+                                  value={formikProps.values.name}
+                                  placeholder="nom de l'événement..."
+                                  placeholderTextColor="#BBBBBB"
+                                  selectionColor="#76EF4D"
+                                  onChangeText={formikProps.handleChange(
+                                    "name"
+                                  )}
+                                />
+                              </View>
+                              <View style={styles.sectionContainer}>
+                                <Text style={styles.textTitle}>Date</Text>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    this.setState({
+                                      mode: "date",
+                                      show: true
+                                    });
+                                  }}
+                                >
+                                  <TextInput
+                                    style={styles.textInput}
+                                    name="date"
+                                    editable={false}
+                                    value={
+                                      this.state.date.getDate() +
+                                      "-" +
+                                      (this.state.date.getMonth() + 1) +
+                                      "-" +
+                                      this.state.date.getFullYear()
+                                    }
+                                    placeholder="choissisez..."
+                                    placeholderTextColor="#BBBBBB"
+                                    selectionColor="#76EF4D"
+                                    onChangeText={formikProps.handleChange(
+                                      "date"
+                                    )}
+                                  />
+                                </TouchableOpacity>
+                              </View>
+
+                              <View style={styles.sectionContainer}>
+                                <Text style={styles.textTitle}>temps</Text>
+                                <View style={styles.timeContainer}>
+                                  <TouchableOpacity
+                                    style={{ width: "45%" }}
+                                    onPress={() => {
+                                      this.setState({
+                                        mode: "time",
+                                        show: true,
+                                        isTimeStart: true
+                                      });
+                                    }}
+                                  >
+                                    <TextInput
+                                      style={[styles.textInput]}
+                                      name="timeStart"
+                                      //value={inputField}
+                                      value={this.state.timeStart}
+                                      placeholder="debut..."
+                                      placeholderTextColor="#BBBBBB"
+                                      onChangeText={formikProps.handleChange(
+                                        "timeStart"
+                                      )}
+                                      //clearTextOnFocus
+                                      //onChangeText={text => handleChange(text)}
+                                      selectionColor="#76EF4D"
+                                      editable={false}
+                                      //onBlur={() => handleFocuse(false)}
+                                    />
+                                  </TouchableOpacity>
+                                  <TouchableOpacity
+                                    style={{ width: "45%" }}
+                                    onPress={() => {
+                                      this.setState({
+                                        mode: "time",
+                                        show: true,
+                                        isTimeEnd: true
+                                      });
+                                    }}
+                                  >
+                                    <TextInput
+                                      style={[styles.textInput]}
+                                      name="timeEnd"
+                                      //value={inputField}
+                                      placeholder="fin..."
+                                      value={this.state.timeEnd}
+                                      placeholderTextColor="#BBBBBB"
+                                      onChangeText={formikProps.handleChange(
+                                        "timeEnd"
+                                      )}
+                                      //clearTextOnFocus
+                                      //onChangeText={text => handleChange(text)}
+                                      selectionColor="#76EF4D"
+                                      editable={false}
+                                      //onBlur={() => handleFocuse(false)}
+                                    />
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+
+                              <View style={styles.sectionContainer}>
+                                <Text style={styles.textTitle}>Image</Text>
+                                <TouchableOpacity style={styles.imageWrapper}>
+                                  <Feather
+                                    name="image"
+                                    size={50}
+                                    color="#062743"
+                                  />
+                                </TouchableOpacity>
+                              </View>
+                              <View style={styles.sectionContainer}>
+                                <Text style={styles.textTitle}>
+                                  description
+                                </Text>
+                                <TextArea
+                                  //style={{ height: 180 }}
+                                  name="description"
+                                  onChangeText={formikProps.handleChange(
+                                    "description"
+                                  )}
+                                  value={formikProps.values.description}
+                                  multiline
+                                  containerStyle={styles.textArea}
+                                  maxLength={200}
+                                  placeholder="ecrire une description"
+                                />
+                              </View>
+                              <View style={styles.sectionContainer}>
+                                <Text style={styles.textTitle}>location</Text>
+                                <View style={styles.timeContainer}>
+                                  <TextInput
+                                    style={[styles.textInput, { width: "45%" }]}
+                                    name="city"
+                                    value={formikProps.values.city}
+                                    onChangeText={formikProps.handleChange(
+                                      "city"
+                                    )}
+                                    //value={inputField}
+                                    placeholder="ville..."
+                                    placeholderTextColor="#BBBBBB"
+                                    //clearTextOnFocus
+                                    //onChangeText={text => handleChange(text)}
+                                    selectionColor="#76EF4D"
+                                    //onFocus={() => handleFocuse(true)}
+                                    //onBlur={() => handleFocuse(false)}
+                                  />
+                                  <TextInput
+                                    style={[styles.textInput, { width: "45%" }]}
+                                    name="street"
+                                    value={formikProps.values.street}
+                                    onChangeText={formikProps.handleChange(
+                                      "street"
+                                    )}
+                                    //value={inputField}
+                                    placeholder="rue..."
+                                    placeholderTextColor="#BBBBBB"
+                                    //clearTextOnFocus
+                                    //onChangeText={text => handleChange(text)}
+                                    selectionColor="#76EF4D"
+                                    //onFocus={() => handleFocuse(true)}
+                                    //onBlur={() => handleFocuse(false)}
+                                  />
+                                </View>
+                              </View>
+                              <View style={styles.sectionContainer}>
+                                <Text style={styles.textTitle}>
+                                  nombre de partisipant
+                                </Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  name="nbParticipant"
+                                  onChangeText={formikProps.handleChange(
+                                    "nbParticipant"
+                                  )}
+                                  value={formikProps.values.nbParticipant}
+                                  placeholder="nombre..."
+                                  placeholderTextColor="#BBBBBB"
+                                  selectionColor="#76EF4D"
+                                  keyboardType="number-pad"
+                                />
+                              </View>
+                              <View
+                                style={[
+                                  styles.sectionContainer,
+                                  {
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                  }
+                                ]}
+                              >
+                                <TouchableOpacity
+                                  style={styles.sendBtn}
+                                  onPress={formikProps.handleSubmit}
+                                >
+                                  <Text style={styles.sendTxt}>ajouter</Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          )}
+                        </Formik>
                       </View>
                       {this.state.show && (
                         <DateTimePicker
@@ -218,6 +345,7 @@ class AddScreen extends Component {
                           mode={this.state.mode}
                           is24Hour={true}
                           display="default"
+                          onChange={this.onChangePicker}
                         />
                       )}
                     </View>
