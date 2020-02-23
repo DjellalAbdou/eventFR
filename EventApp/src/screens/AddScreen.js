@@ -11,19 +11,19 @@ import {
   Platform,
   KeyboardAvoidingView,
   SafeAreaView,
-  Image
+  Image,
+  ActivityIndicator,
+  TouchableHighlightBase
 } from "react-native";
-import EventComp from "../components/EventComp";
+
 import { Feather } from "@expo/vector-icons";
 import IconRippleButton from "../components/IconRippleButton";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import TextArea from "react-native-textarea";
-import { Dropdown } from "react-native-material-dropdown";
-import SearchableDropdown from "react-native-searchable-dropdown";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
-import ModalDropdown from "react-native-modal-dropdown";
 import { Formik } from "formik";
 import { chooseFile } from "../utils/cameraUtil";
+import MapView, { Marker } from "react-native-maps";
 
 const { height, width } = Dimensions.get("window");
 let data = [
@@ -49,7 +49,37 @@ class AddScreen extends Component {
     show: false,
     isTimeStart: false,
     isTimeEnd: false,
-    imageDetails: null
+    imageDetails: null,
+    mapLoaded: false,
+    region: {
+      longitude: -122,
+      latitude: 37,
+      longitudeDelta: 0.04,
+      latitudeDelta: 0.09
+    },
+    markerLatLng: {
+      longitude: -122,
+      latitude: 37
+    }
+  };
+
+  componentDidMount() {
+    this.setState({ mapLoaded: true });
+  }
+
+  onRegionChangeComplete = region => {
+    this.setState({
+      region
+      // markerLatLng: {
+      //   longitude: region.longitude,
+      //   latitude: region.latitude
+      // }
+    });
+  };
+
+  onDragMarker = e => {
+    console.log(e.nativeEvent);
+    this.setState({ markerLatLng: e.nativeEvent.coordinate });
   };
 
   onChangePicker = (event, selectedDate) => {
@@ -131,7 +161,8 @@ class AddScreen extends Component {
                               timeStart: this.state.timeStart,
                               timeEnd: this.state.timeEnd,
                               date: this.state.date,
-                              imageDetails: this.state.imageDetails
+                              imageDetails: this.state.imageDetails,
+                              markerLatLng: this.state.markerLatLng
                             };
                             console.log(finishedObj);
                           }}
@@ -283,7 +314,41 @@ class AddScreen extends Component {
                                 />
                               </View>
                               <View style={styles.sectionContainer}>
-                                <Text style={styles.textTitle}>location</Text>
+                                <View
+                                  style={{
+                                    flexDirection: "row",
+                                    alignItems: "center"
+                                  }}
+                                >
+                                  <Text style={styles.textTitle}>location</Text>
+                                  <Text style={styles.textExplanation}>
+                                    // drag marker
+                                  </Text>
+                                </View>
+
+                                <View style={styles.mapWrapper}>
+                                  {this.state.mapLoaded ? (
+                                    <MapView
+                                      region={this.state.region}
+                                      style={{ width: "100%", height: "100%" }}
+                                      onRegionChangeComplete={
+                                        this.onRegionChangeComplete
+                                      }
+                                      cacheEnabled={
+                                        Platform.OS === "android" ? true : false
+                                      }
+                                    >
+                                      <Marker
+                                        draggable
+                                        coordinate={this.state.markerLatLng}
+                                        title={"drag me"}
+                                        onDragEnd={this.onDragMarker}
+                                      />
+                                    </MapView>
+                                  ) : (
+                                    <ActivityIndicator size="large" />
+                                  )}
+                                </View>
                                 <View style={styles.timeContainer}>
                                   <TextInput
                                     style={[styles.textInput, { width: "45%" }]}
@@ -507,6 +572,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10
   },
+  textExplanation: {
+    fontSize: 12,
+    color: "#BBBBBB",
+    marginBottom: 10,
+    marginLeft: 20
+  },
   imageWrapper: {
     marginTop: 20,
     height: 150,
@@ -520,6 +591,21 @@ const styles = StyleSheet.create({
     elevation: 2,
     backgroundColor: "#FFFFFF",
     overflow: "hidden"
+  },
+  mapWrapper: {
+    marginTop: 20,
+    height: 200,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowOpacity: 0.29,
+    shadowRadius: 10,
+    shadowColor: "#000000",
+    shadowOffset: { height: 0, width: 0 },
+    elevation: 2,
+    backgroundColor: "#FFFFFF",
+    overflow: "hidden",
+    marginBottom: 20
   },
   sectionContainer: {
     marginBottom: 30
