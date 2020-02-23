@@ -10,7 +10,8 @@ import {
   ScrollView,
   Platform,
   KeyboardAvoidingView,
-  SafeAreaView
+  SafeAreaView,
+  Image
 } from "react-native";
 import EventComp from "../components/EventComp";
 import { Feather } from "@expo/vector-icons";
@@ -22,6 +23,7 @@ import SearchableDropdown from "react-native-searchable-dropdown";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 import ModalDropdown from "react-native-modal-dropdown";
 import { Formik } from "formik";
+import { chooseFile } from "../utils/cameraUtil";
 
 const { height, width } = Dimensions.get("window");
 let data = [
@@ -46,7 +48,8 @@ class AddScreen extends Component {
     mode: "date",
     show: false,
     isTimeStart: false,
-    isTimeEnd: false
+    isTimeEnd: false,
+    imageDetails: null
   };
 
   onChangePicker = (event, selectedDate) => {
@@ -61,9 +64,6 @@ class AddScreen extends Component {
         ? selectedDate.getHours() + ":" + selectedDate.getMinutes() ||
           this.state.date.getHours() + ":" + this.state.date.getMinutes()
         : this.state.date.getHours() + ":" + this.state.date.getMinutes();
-
-    //console.log(currentDate);
-    //console.log(chosenTime);
 
     this.setState({
       timeStart: this.state.isTimeStart ? chosenTime : this.state.timeStart,
@@ -123,10 +123,17 @@ class AddScreen extends Component {
                             description: "",
                             city: "",
                             street: "",
-                            nbParticipant: 0
+                            nbParticipant: ""
                           }}
                           onSubmit={values => {
-                            console.log(values);
+                            let finishedObj = {
+                              ...values,
+                              timeStart: this.state.timeStart,
+                              timeEnd: this.state.timeEnd,
+                              date: this.state.date,
+                              imageDetails: this.state.imageDetails
+                            };
+                            console.log(finishedObj);
                           }}
                         >
                           {formikProps => (
@@ -238,12 +245,24 @@ class AddScreen extends Component {
 
                               <View style={styles.sectionContainer}>
                                 <Text style={styles.textTitle}>Image</Text>
-                                <TouchableOpacity style={styles.imageWrapper}>
-                                  <Feather
-                                    name="image"
-                                    size={50}
-                                    color="#062743"
-                                  />
+                                <TouchableOpacity
+                                  onPress={() => chooseFile(this)}
+                                  style={styles.imageWrapper}
+                                >
+                                  {this.state.imageDetails !== null ? (
+                                    <Image
+                                      style={styles.choosenImg}
+                                      source={{
+                                        uri: this.state.imageDetails.uri
+                                      }}
+                                    />
+                                  ) : (
+                                    <Feather
+                                      name="image"
+                                      size={50}
+                                      color="#062743"
+                                    />
+                                  )}
                                 </TouchableOpacity>
                               </View>
                               <View style={styles.sectionContainer}>
@@ -499,7 +518,8 @@ const styles = StyleSheet.create({
     shadowColor: "#000000",
     shadowOffset: { height: 0, width: 0 },
     elevation: 2,
-    backgroundColor: "#FFFFFF"
+    backgroundColor: "#FFFFFF",
+    overflow: "hidden"
   },
   sectionContainer: {
     marginBottom: 30
@@ -532,5 +552,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#ffffff",
     fontWeight: "bold"
+  },
+  choosenImg: {
+    height: 150,
+    width: "100%"
   }
 });
