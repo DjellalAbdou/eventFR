@@ -1,15 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   ImageBackground,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  FlatList
 } from "react-native";
 import EventComp from "../components/EventComp";
+import { eventApi } from "../api";
 const { height, width } = Dimensions.get("window");
 
 const LikesScreen = () => {
+  const [allEvents, setAllEvents] = useState([]);
+  const [allEventsFiltred, setAllEventsFiltred] = useState([]);
+
+  const setEvents = events => {
+    setAllEvents(events);
+    setAllEventsFiltred(events);
+  };
+
+  useEffect(() => {
+    eventApi.getLikedEvents(setEvents);
+    console.log(allEventsFiltred.length);
+  }, []);
+
   return (
     <View>
       <ImageBackground
@@ -31,9 +46,12 @@ const LikesScreen = () => {
             resizeMode="contain"
           >
             <View style={styles.eventContainer}>
-              <EventComp />
-              <EventComp />
-              <EventComp />
+              <FlatList
+                style={{ height: "100%" }}
+                data={allEventsFiltred}
+                keyExtractor={item => item._id}
+                renderItem={({ item }) => <EventComp item={item} />}
+              />
             </View>
           </ImageBackground>
         </View>

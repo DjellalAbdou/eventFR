@@ -12,39 +12,44 @@ import NavigationService from "../navigation/routes/NavigationService";
 
 const { width, height } = Dimensions.get("window");
 
-const EventComp = props => {
+const EventComp = ({ item, modal, removeModal }) => {
   const changeRoute = route => {
-    if (props.modal) props.removeModal();
+    if (modal) removeModal();
     NavigationService.navigate(route);
   };
+
+  const like = JSON.parse(item.liked);
 
   return (
     <TouchableOpacity onPress={() => changeRoute("currentEvent")}>
       <View
-        style={[
-          styles.compContainer,
-          props.modal ? { width: width * 0.7 } : null
-        ]}
+        style={[styles.compContainer, modal ? { width: width * 0.7 } : null]}
       >
         <ImageBackground
           resizeMode="cover"
-          source={require("../../assets/work.jpg")}
+          source={item ? { uri: item.image } : require("../../assets/work.jpg")}
           style={styles.backgroundimage}
         >
           <View style={styles.cardContainer}>
             <View style={styles.bookmarkContainer}>
-              <Feather name="bookmark" size={28} color="#ffffff" />
+              <Feather
+                name="bookmark"
+                size={28}
+                color={like ? "#76EF4D" : "#ffffff"}
+              />
             </View>
             <View style={styles.textsWrapper}>
-              <Text style={styles.title}> Startup community #1</Text>
+              <Text style={styles.title}> {item.title}</Text>
               <View style={styles.dateandtimeContainer}>
                 <View style={styles.dateContainer}>
                   <Feather name="calendar" size={15} color="#ffffff" />
-                  <Text style={styles.dateandtimeText}>22.03.20</Text>
+                  <Text style={styles.dateandtimeText}>{item.date}</Text>
                 </View>
                 <View style={styles.dateContainer}>
                   <Feather name="clock" size={15} color="#ffffff" />
-                  <Text style={styles.dateandtimeText}>18:30 - 20:30</Text>
+                  <Text style={styles.dateandtimeText}>
+                    {item.timeStart}- {item.timeEnd}
+                  </Text>
                 </View>
               </View>
             </View>

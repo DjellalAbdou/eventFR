@@ -24,22 +24,33 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview"
 import { Formik } from "formik";
 import { chooseFile } from "../utils/cameraUtil";
 import MapView, { Marker } from "react-native-maps";
+import { Dropdown } from "react-native-material-dropdown";
+import ModalDropdown from "react-native-modal-dropdown";
+import Menu, { MenuItem, MenuDivider } from "react-native-material-menu";
+import { eventApi } from "../api";
 
 const { height, width } = Dimensions.get("window");
-let data = [
+let categorie = [
   {
-    value: "Banana"
+    value: "soirées étudiants"
   },
   {
-    value: "Mango"
+    value: "boite de nuit"
   },
   {
-    value: "Pear"
+    value: "événements et festivals"
+  },
+  {
+    value: "soirées privées"
+  },
+  {
+    value: "autres"
   }
 ];
 
 class AddScreen extends Component {
   date = new Date();
+  _menu = null;
 
   state = {
     date: this.date,
@@ -60,7 +71,8 @@ class AddScreen extends Component {
     markerLatLng: {
       longitude: -122,
       latitude: 37
-    }
+    },
+    categorie: ""
   };
 
   componentDidMount() {
@@ -77,7 +89,28 @@ class AddScreen extends Component {
     });
   };
 
+  goBackScreen = () => {
+    this.props.navigation.goBack();
+  };
+
+  setMenuRef = ref => {
+    this._menu = ref;
+  };
+
+  hideMenu = () => {
+    this._menu.hide();
+  };
+
+  showMenu = () => {
+    this._menu.show();
+  };
+
+  onChangeCategorie = categorie => {
+    this.setState({ categorie });
+  };
+
   onDragMarker = e => {
+    console.log(e);
     console.log(e.nativeEvent);
     this.setState({ markerLatLng: e.nativeEvent.coordinate });
   };
@@ -103,6 +136,12 @@ class AddScreen extends Component {
       isTimeStart: false,
       isTimeEnd: false
     });
+  };
+
+  getImageName = () => {
+    let array = this.state.imageDetails.uri.split("/");
+    let name = array[array.length - 1];
+    return name;
   };
 
   render() {
@@ -160,11 +199,27 @@ class AddScreen extends Component {
                               ...values,
                               timeStart: this.state.timeStart,
                               timeEnd: this.state.timeEnd,
-                              date: this.state.date,
-                              imageDetails: this.state.imageDetails,
-                              markerLatLng: this.state.markerLatLng
+                              date:
+                                this.state.date.getDate() +
+                                "-" +
+                                (this.state.date.getMonth() + 1) +
+                                "-" +
+                                this.state.date.getFullYear(),
+                              //imageDetails: this.state.imageDetails,
+
+                              markerLat: this.state.markerLatLng.latitude,
+                              markerLng: this.state.markerLatLng.longitude,
+                              categorie: this.state.categorie
                             };
-                            console.log(finishedObj);
+
+                            let image = {
+                              filename: this.getImageName(),
+                              ...this.state.imageDetails,
+                              type: this.state.imageDetails.type + "/jpg"
+                            };
+                            console.log(finishedObj, image);
+                            //eventApi.getAllEvents();
+                            eventApi.postNewEvent(finishedObj, image, this);
                           }}
                         >
                           {formikProps => (
@@ -322,13 +377,14 @@ class AddScreen extends Component {
                                 >
                                   <Text style={styles.textTitle}>location</Text>
                                   <Text style={styles.textExplanation}>
-                                    // drag marker
+                                    // drag marker or press in map
                                   </Text>
                                 </View>
 
                                 <View style={styles.mapWrapper}>
                                   {this.state.mapLoaded ? (
                                     <MapView
+                                      onPress={this.onDragMarker}
                                       region={this.state.region}
                                       style={{ width: "100%", height: "100%" }}
                                       onRegionChangeComplete={
@@ -400,6 +456,91 @@ class AddScreen extends Component {
                                   selectionColor="#76EF4D"
                                   keyboardType="number-pad"
                                 />
+                              </View>
+                              <View style={styles.sectionContainer}>
+                                <Text style={styles.textTitle}>categorie</Text>
+
+                                <Menu
+                                  button={
+                                    <TouchableOpacity onPress={this.showMenu}>
+                                      <TextInput
+                                        style={[styles.textInput]}
+                                        name="timeEnd"
+                                        //value={inputField}
+                                        placeholder="categorie"
+                                        value={this.state.categorie}
+                                        placeholderTextColor="#BBBBBB"
+                                        //clearTextOnFocus
+                                        //onChangeText={text => handleChange(text)}
+                                        selectionColor="#76EF4D"
+                                        editable={false}
+                                        //onBlur={() => handleFocuse(false)}
+                                      />
+                                    </TouchableOpacity>
+                                  }
+                                  ref={this.setMenuRef}
+                                >
+                                  <MenuItem
+                                    onPress={() => {
+                                      this.onChangeCategorie(
+                                        "soirées étudiants"
+                                      );
+                                      this.hideMenu();
+                                    }}
+                                    disabled={
+                                      this.state.categorie ===
+                                      "soirées étudiants"
+                                    }
+                                  >
+                                    soirées étudiants
+                                  </MenuItem>
+                                  <MenuItem
+                                    onPress={() => {
+                                      this.onChangeCategorie("boite de nuit");
+                                      this.hideMenu();
+                                    }}
+                                    disabled={
+                                      this.state.categorie === "boite de nuit"
+                                    }
+                                  >
+                                    boite de nuit
+                                  </MenuItem>
+                                  <MenuItem
+                                    onPress={() => {
+                                      this.onChangeCategorie(
+                                        "événements et festivals"
+                                      );
+                                      this.hideMenu();
+                                    }}
+                                    disabled={
+                                      this.state.categorie ===
+                                      "événements et festivals"
+                                    }
+                                  >
+                                    événements et festivals
+                                  </MenuItem>
+
+                                  <MenuItem
+                                    onPress={() => {
+                                      this.onChangeCategorie("soirées privées");
+                                      this.hideMenu();
+                                    }}
+                                    disabled={
+                                      this.state.categorie === "soirées privées"
+                                    }
+                                  >
+                                    soirées privées
+                                  </MenuItem>
+                                  <MenuItem
+                                    onPress={() => {
+                                      this.onChangeCategorie("autres");
+                                      this.hideMenu();
+                                    }}
+                                    disabled={this.state.categorie === "autres"}
+                                  >
+                                    autres
+                                  </MenuItem>
+                                </Menu>
                               </View>
                               <View
                                 style={[

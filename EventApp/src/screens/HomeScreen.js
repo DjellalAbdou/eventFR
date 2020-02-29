@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,20 +6,34 @@ import {
   ImageBackground,
   Dimensions,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import EventComp from "../components/EventComp";
+import { eventApi } from "../api";
 
 const { height, width } = Dimensions.get("window");
 
 const HomeScreen = () => {
   const [inputField, setInputField] = useState("");
   const [focused, setFocused] = useState(false);
+  const [allEvents, setAllEvents] = useState([]);
+  const [allEventsFiltred, setAllEventsFiltred] = useState([]);
 
   const handleFocuse = towhat => {
     setFocused(towhat);
   };
+
+  const setEvents = events => {
+    setAllEvents(events);
+    setAllEventsFiltred(events);
+  };
+
+  useEffect(() => {
+    eventApi.getAllEvents(setEvents);
+    console.log(allEventsFiltred.length);
+  }, []);
 
   const handleChange = text => {
     setInputField(text);
@@ -63,9 +77,12 @@ const HomeScreen = () => {
         />
       </View>
       <View style={styles.eventsContainer}>
-        <EventComp />
-        <EventComp />
-        <EventComp />
+        <FlatList
+          style={{ height: "82%" }}
+          data={allEventsFiltred}
+          keyExtractor={item => item._id}
+          renderItem={({ item }) => <EventComp item={item} />}
+        />
       </View>
     </ImageBackground>
   );
