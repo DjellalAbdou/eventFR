@@ -15,14 +15,16 @@ import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import Modal from "react-native-modal";
 
+import { eventApi } from "../api";
+
 const { height, width } = Dimensions.get("window");
 
 class MapScreen extends Component {
   state = {
     mapLoaded: false,
     region: {
-      longitude: -122,
-      latitude: 37,
+      longitude: 3.872225,
+      latitude: 43.635753,
       longitudeDelta: 0.04,
       latitudeDelta: 0.09
     },
@@ -30,45 +32,48 @@ class MapScreen extends Component {
     modalVisible: false
   };
 
+  setMarkers = events => {
+    this.setState({ markers: events, mapLoaded: true });
+  };
+
   componentDidMount() {
-    axios
-      .get(
-        "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US&apikey=fQ2rRCwwueRTYMPypcpuPaTO58mLLQZe"
-      )
-      .then(resp => {
-        console.log(resp);
-        let data = resp.data;
-        data = data._embedded.events;
+    eventApi.getAllEvents(this.setMarkers);
+    // axios
+    //   .get(
+    //     "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US&apikey=fQ2rRCwwueRTYMPypcpuPaTO58mLLQZe"
+    //   )
+    //   .then(resp => {
+    //     console.log(resp);
+    //     let data = resp.data;
+    //     data = data._embedded.events;
 
-        let markers = data.map(event => {
-          let eventobj = {
-            title: event.name,
-            description: event.info,
-            latlng: {
-              latitude: parseInt(
-                event._embedded.venues[0].location.latitude,
-                10
-              ),
-              longitude: parseInt(
-                event._embedded.venues[0].location.longitude,
-                10
-              )
-            }
-          };
-          return eventobj;
-        });
+    //     let markers = data.map(event => {
+    //       let eventobj = {
+    //         title: event.name,
+    //         description: event.info,
+    //         latlng: {
+    //           latitude: parseInt(
+    //             event._embedded.venues[0].location.latitude,
+    //             10
+    //           ),
+    //           longitude: parseInt(
+    //             event._embedded.venues[0].location.longitude,
+    //             10
+    //           )
+    //         }
+    //       };
+    //       return eventobj;
+    //     });
 
-        console.log(data);
-        this.setState({
-          region: {
-            ...this.state.region,
-            latitude: markers[0].latlng.latitude,
-            longitude: markers[0].latlng.longitude
-          },
-          markers,
-          mapLoaded: true
-        });
-      });
+    //     console.log(data);
+    //     this.setState({
+    //       region: {
+    //         ...this.state.region
+    //       },
+    //       markers,
+    //       mapLoaded: true
+    //     });
+    //   });
   }
 
   onRegionChangeComplete = region => {
@@ -107,7 +112,7 @@ class MapScreen extends Component {
                     {this.state.markers.map((marker, index) => (
                       <Marker
                         key={index}
-                        coordinate={marker.latlng}
+                        coordinate={marker.geoLocation}
                         title={marker.title}
                         description={marker.description}
                         onPress={() => {

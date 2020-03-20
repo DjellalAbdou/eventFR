@@ -5,7 +5,9 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions,
-  StyleSheet
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableNativeFeedback
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import NavigationService from "../navigation/routes/NavigationService";
@@ -21,7 +23,7 @@ const EventComp = ({ item, modal, removeModal }) => {
   const like = JSON.parse(item.liked);
 
   return (
-    <TouchableOpacity onPress={() => changeRoute("currentEvent")}>
+    <TouchableNativeFeedback onPress={() => changeRoute("currentEvent")}>
       <View
         style={[styles.compContainer, modal ? { width: width * 0.7 } : null]}
       >
@@ -56,7 +58,7 @@ const EventComp = ({ item, modal, removeModal }) => {
           </View>
         </ImageBackground>
       </View>
-    </TouchableOpacity>
+    </TouchableNativeFeedback>
   );
 };
 
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   cardContainer: {
+    width: "100%",
     height: "100%",
     flexDirection: "column",
     justifyContent: "space-between"

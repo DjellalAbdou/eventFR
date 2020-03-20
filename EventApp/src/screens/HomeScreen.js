@@ -72,8 +72,8 @@ const HomeScreen = () => {
           //clearTextOnFocus
           onChangeText={text => handleChange(text)}
           selectionColor="#76EF4D"
-          onFocus={() => handleFocuse(true)}
-          onBlur={() => handleFocuse(false)}
+          /* onFocus={() => handleFocuse(true)}
+          onBlur={() => handleFocuse(false)} */
         />
       </View>
       <View style={styles.eventsContainer}>
