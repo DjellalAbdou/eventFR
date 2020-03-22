@@ -14,7 +14,7 @@ import NavigationService from "../navigation/routes/NavigationService";
 
 const { width, height } = Dimensions.get("window");
 
-const EventComp = ({ item, modal, removeModal }) => {
+const EventComp = ({ item, modal, edit, removeModal }) => {
   const changeRoute = route => {
     if (modal) removeModal();
     NavigationService.navigate(route);
@@ -25,7 +25,10 @@ const EventComp = ({ item, modal, removeModal }) => {
   return (
     <TouchableNativeFeedback onPress={() => changeRoute("currentEvent")}>
       <View
-        style={[styles.compContainer, modal ? { width: width * 0.7 } : null]}
+        style={[
+          styles.compContainer,
+          modal || edit ? { width: width * 0.7 } : null
+        ]}
       >
         <ImageBackground
           resizeMode="cover"

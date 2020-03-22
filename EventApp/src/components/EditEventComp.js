@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import EventComp from "./EventComp";
 import IconRippleButton from "./IconRippleButton";
 
-const EditEventComp = () => {
+const EditEventComp = props => {
   return (
     <View style={styles.columnsContainer}>
       <View style={styles.firstColumn}>
@@ -24,7 +24,7 @@ const EditEventComp = () => {
           onPress={() => console.log("pressed delete")}
         />
       </View>
-      <EventComp edit />
+      <EventComp edit item={props.item} />
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,10 +11,22 @@ import EventComp from "../components/EventComp";
 import { Feather } from "@expo/vector-icons";
 import IconRippleButton from "../components/IconRippleButton";
 import EditEventComp from "../components/EditEventComp";
+import { eventApi } from "../api";
+import { FlatList } from "react-native-gesture-handler";
 
 const { height, width } = Dimensions.get("window");
 
 const MyEventsScreen = props => {
+  const [myEvents, setMyEvents] = useState([]);
+
+  const setEvents = events => {
+    setMyEvents(events);
+  };
+
+  useEffect(() => {
+    eventApi.getAllEvents(setEvents);
+  }, []);
+
   return (
     <View>
       <ImageBackground
@@ -50,9 +62,14 @@ const MyEventsScreen = props => {
                 <View style={styles.greenBorder} />
               </View>
               <View style={{ marginTop: 20 }}>
+                <FlatList
+                  data={myEvents}
+                  keyExtractor={item => item._id}
+                  renderItem={({ item }) => <EditEventComp item={item} />}
+                />
+                {/* <EditEventComp />
                 <EditEventComp />
-                <EditEventComp />
-                <EditEventComp />
+                <EditEventComp /> */}
               </View>
             </View>
           </ImageBackground>

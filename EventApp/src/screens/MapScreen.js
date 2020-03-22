@@ -29,15 +29,25 @@ class MapScreen extends Component {
       latitudeDelta: 0.09
     },
     markers: [],
-    modalVisible: false
+    modalVisible: false,
+    selectedMarker: 0
   };
 
   setMarkers = events => {
-    this.setState({ markers: events, mapLoaded: true });
+    const newmarkers = events.map(event => {
+      console.log(event);
+      let geoloc = event.geoLocation;
+      geoloc.latitude = Number(geoloc.latitude);
+      geoloc.longitude = Number(geoloc.longitude);
+      event.geoLocation = geoloc;
+      return event;
+    });
+    this.setState({ markers: newmarkers, mapLoaded: true });
   };
 
   componentDidMount() {
     eventApi.getAllEvents(this.setMarkers);
+    console.log(this.state.markers);
     // axios
     //   .get(
     //     "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US&apikey=fQ2rRCwwueRTYMPypcpuPaTO58mLLQZe"
@@ -117,7 +127,10 @@ class MapScreen extends Component {
                         description={marker.description}
                         onPress={() => {
                           console.log("open model");
-                          this.setState({ modalVisible: true });
+                          this.setState({
+                            selectedMarker: index,
+                            modalVisible: true
+                          });
                         }}
                       />
                     ))}
@@ -157,6 +170,7 @@ class MapScreen extends Component {
                       <View style={styles.greenBorder} />
                     </View>
                     <EventComp
+                      item={this.state.markers[this.state.selectedMarker]}
                       modal
                       removeModal={() => {
                         this.setState({ modalVisible: false });
