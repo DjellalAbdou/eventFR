@@ -32,19 +32,19 @@ this source folder is composed of 6 sub-folders each containing a specific code,
 
 - **Calendar :**
 
-  <img src="./images/checkschedular.jpg" style="zoom: 80%;" />
+  <img src="./images/checkschedular.jpg" height="500px" />
 
 - **Map :**
 
-  <img src="./images/checkEventsPosition.jpg" style="zoom: 33%;" />
+  <img src="./images/checkEventsPosition.jpg" height="500" />
 
 - **favorite Events :** 
 
-<img src="./images/favorite.jpg" style="zoom:33%;" />
+<img src="./images/favorite.jpg" height="500" />
 
 - **Event Details :**
 
-<img src="./images/eventDetails.jpg" style="zoom:33%;" />
+<img src="./images/eventDetails.jpg" height="500" />
 
 - **Fix Hour And Date :**
 
@@ -54,11 +54,11 @@ this source folder is composed of 6 sub-folders each containing a specific code,
 
 - **Settings :** 
 
-<img src="./images/settings.jpg" style="zoom:33%;" />
+<img src="./images/settings.jpg" height="500" />
 
 - **Home :**
 
-<img src="./images/home.jpg" style="zoom:33%;" />
+<img src="./images/home.jpg" height="500" />
 
 ## How to run
 
