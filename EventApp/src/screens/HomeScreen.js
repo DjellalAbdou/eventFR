@@ -43,13 +43,11 @@ const HomeScreen = () => {
   };
 
   const modifyFilters = filter => {
-    console.log(choosenFilter);
     let newfiltered = [...choosenFilter];
     if (choosenFilter.includes(filter)) {
       newfiltered.splice(choosenFilter.indexOf(filter), 1);
       setChoosenFilter(newfiltered);
     } else setChoosenFilter([...choosenFilter, filter]);
-    console.log(choosenFilter);
   };
 
   return (
